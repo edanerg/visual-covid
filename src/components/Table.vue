@@ -15,7 +15,7 @@
         <v-data-table
         :headers="headers"
         :items="countryData"
-        :sort-by="type=='global' ? ['comfirmed'] : ['date']"
+        :sort-by="type=='global' ? ['confirmed'] : ['date']"
         :sort-desc="[true]"
         :items-per-page="countryData.length"
         :search="search"
@@ -24,8 +24,8 @@
             <template v-slot:item.date="{ item }">
                 {{formatDate(item.date)}}
             </template>
-            <template v-if="type=='global'" v-slot:item.comfirmed="{ item }">
-                <v-chip label :color="colorScale['comfirmed'](item.comfirmed+1)" dark>{{ item.comfirmed }}</v-chip>
+            <template v-if="type=='global'" v-slot:item.confirmed="{ item }">
+                <v-chip label :color="colorScale['confirmed'](item.confirmed+1)" dark>{{ item.confirmed }}</v-chip>
             </template>
             <template v-if="type=='global'" v-slot:item.death="{ item }">
                 <v-chip label :color="colorScale['death'](item.death+1)" dark>{{ item.death }}</v-chip>
@@ -57,12 +57,12 @@ export default {
         headers: function () {
             if (this.type == "global") {
                 return [{text: "Country/Region", value: "name", align: "start", width: "300"},
-                        {text: "Comfirmed", value: "comfirmed", align: "start", sortable: true},
+                        {text: "confirmed", value: "confirmed", align: "start", sortable: true},
                         {text: "Death", value: "death", align: "start", sortable: true},
                         {text: "Recovered", value: "recovered", align: "start", sortable: true}]
             } else {
                 return [{text: "Date", value: "date", align: "start", width: "300", sortable: true},
-                        {text: "Total Comfirmed", value: "comfirmed", align: "start", sortable: true},
+                        {text: "Total Confirmed Cases", value: "confirmed", align: "start", sortable: true},
                         {text: "Total Death", value: "death", align: "start", sortable: true},
                         {text: "Total Recovered", value: "recovered", align: "start", sortable: true}]
             }
@@ -73,7 +73,7 @@ export default {
         return {
             search: '',
             colorScale: {
-                comfirmed: d3.scaleLog().domain([1, 10000000]).range(["rgb(196, 230, 255)", "rgb(0, 63, 110)"]),
+                confirmed: d3.scaleLog().domain([1, 10000000]).range(["rgb(196, 230, 255)", "rgb(0, 63, 110)"]),
                 death: d3.scaleLog().domain([1, 1000000]).range(["rgb(196, 230, 255)", "rgb(0, 63, 110)"]),
                 recovered: d3.scaleLog().domain([1, 10000000]).range(["rgb(196, 230, 255)", "rgb(0, 63, 110)"])
             }

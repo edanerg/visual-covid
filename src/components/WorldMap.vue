@@ -1,13 +1,17 @@
 <template>
 <div>
     <svg id="worldMap" class="worldMap"></svg>
-    <p v-if="dataType=='comfirmed'">Total Comfirmed Cases</p>
+    <p v-if="dataType=='confirmed'">Total Confirmed Cases</p>
     <p v-else-if="dataType=='death'">Total Death</p>
     <p v-else-if="dataType=='recovered'">Total Recovered</p>
 
     <v-select
         v-model="dataType"
-        :items="['comfirmed', 'death', 'recovered']"
+        item-text="text"
+        item-value="value"
+        :items="[{text: 'Total Confirmed Cases', value: 'confirmed'},
+                {text: 'Total Death', value: 'death'},
+                {text: 'Total Recovered', value: 'recovered'}]"
         label="Data Type"
     ></v-select>
 </div>
@@ -211,7 +215,7 @@ export default {
     },
     data: function () {
         return {
-            dataType: "comfirmed"
+            dataType: "confirmed"
         }
     },
     beforeDestroy: function () {

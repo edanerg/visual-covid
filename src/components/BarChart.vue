@@ -1,13 +1,17 @@
 <template>
 <div>
     <svg id="runChart" class="runChart"></svg>
-    <p v-if="type=='comfirmed'">Total Comfirmed Cases</p>
+    <p v-if="type=='confirmed'">Total Confirmed Cases</p>
     <p v-else-if="type=='death'">Total Death</p>
     <p v-else-if="type=='recovered'">Total Recovered</p>
 
     <v-select
     v-model="type"
-    :items="['comfirmed', 'death','recovered']"
+    item-text="text"
+    item-value="value"
+    :items="[{text: 'Total Confirmed Cases', value: 'confirmed'},
+             {text: 'Total Death', value: 'death'},
+             {text: 'Total Recovered', value: 'recovered'}]"
     label="Data Type"
     >
     </v-select>
@@ -101,7 +105,7 @@ class BarChart {
 
     buildScales() {
         const {width, n, margin, barSize} = this.options
-        const scale = d3.scaleOrdinal(d3.schemeTableau10)
+        const scale = d3.scaleOrdinal(d3.schemePaired)
         const color = d => scale(d)
         const x = d3.scaleLinear([0, 1], [margin.left, width-margin.right])
         const y = d3.scaleBand().domain(d3.range(n + 1)).rangeRound([margin.top, barSize * (n + 1 + 0.1)]).padding(0.1)
@@ -135,13 +139,11 @@ class BarChart {
                     .attr("fill-opacity", 0.6)
                     .selectAll("rect")
         var label = svg.append("g")
-                    .style("font", "bold 12px var(--sans-serif)")
-                    .style("font-variant-numeric", "tabular-nums")
+                    .style("font-size", "12px")
                     .attr("text-anchor", "end")
                     .selectAll("text")
         var number = svg.append("g")
-                        .style("font", "bold 12px var(--sans-serif)")
-                        .style("font-variant-numeric", "tabular-nums")
+                        .style("font-size", "12px")
                         .attr("text-anchor", "start")
                         .selectAll("text")
         var g = svg.append("g")
@@ -154,11 +156,11 @@ class BarChart {
 
         var now = svg.append("text")
                         .text(formatDate(keyframes[0].date))
-                        .style("font", `bold ${barSize}px var(--sans-serif)`)
-                        .style("font-variant-numeric", "tabular-nums")
+                        .style("font-size", "20px")
+                        .style("font-weight", 500)
                         .attr("text-anchor", "end")
                         .attr("x", width - 6)
-                        .attr("y", margin.top + barSize * (n - 0.45))
+                        .attr("y", margin.top + barSize * (n - 1))
                         .attr("dy", "0.32em")
         this.components = {bar, label, number, g, axis, now}
 
@@ -226,7 +228,7 @@ class BarChart {
         axisAnimation = (_, transition) => {
             g.transition(transition).call(axis)
             g.select(".tick:first-of-type text").remove()
-            g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white")
+            g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "lightgrey").attr("stroke-dasharray", "5,5")
             g.select(".domain").remove()
         }
 
@@ -261,20 +263,20 @@ export default {
     },
     watch: {
         type: function() {
-            const options = {width: 1000, height: 600, barSize: 40, n: 10, k: 5, type: this.type, duration: 250, margin: {top: 16, right: 100, bottom: 6, left: 150}}
+            const options = {width: 1000, height: 600, barSize: 30, n: 15, k: 5, type: this.type, duration: 250, margin: {top: 16, right: 100, bottom: 6, left: 150}}
             chart.build(options)
         }
     },
     mounted: async function() {
         const svg = d3.select("#runChart")
                       .attr("viewBox", [0, 0, 1000, 450])
-        const options = {width: 1000, height: 600, barSize: 40, n: 10, k: 5, type: this.type, duration: 250, margin: {top: 16, right: 100, bottom: 6, left: 150}}
+        const options = {width: 1000, height: 600, barSize: 30, n: 15, k: 5, type: this.type, duration: 250, margin: {top: 16, right: 100, bottom: 6, left: 150}}
         chart = new BarChart(svg)
         chart.build(options)
     },
     data: function () {
         return {
-            type: "comfirmed"
+            type: "confirmed"
         }
     }
 }

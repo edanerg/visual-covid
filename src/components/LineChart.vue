@@ -1,7 +1,7 @@
 <template>
     <div>
         <svg id="lineChart"></svg>
-         <p v-if="value=='comfirmed'">Total Comfirmed Cases</p>
+         <p v-if="value=='confirmed'">Total Confirmed Cases</p>
         <p v-else-if="value=='death'">Total Death</p>
         <p v-else-if="value=='recovered'">Total Recovered</p>
         <v-select
@@ -17,7 +17,11 @@
         <v-select
         v-model="value"
         label="Data Type"
-        :items="['comfirmed', 'death', 'recovered']"
+        item-text="text"
+        item-value="value"
+        :items="[{text: 'Total Confirmed Cases', value: 'confirmed'},
+                {text: 'Total Death', value: 'death'},
+                {text: 'Total Recovered', value: 'recovered'}]"
         >
         </v-select>
     </div>
@@ -337,7 +341,7 @@ export default {
     data: function() {
         return {
             countries: [this.defaultCountry],
-            value: "comfirmed",
+            value: "confirmed",
             countryNames: dp.getAllCountryNames()
         }
     },

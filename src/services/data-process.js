@@ -12,18 +12,18 @@ class DataProcessor {
 
     async loadData() {
         const countryNames = {}
-        const timeSeriesComfirmed = await d3.csv(Config.timeSeriesComfirmed)
+        const timeSeriesconfirmed = await d3.csv(Config.timeSeriesconfirmed)
         const timeSeriesDeath = await d3.csv(Config.timeSeriesDeath)
         const timeSeriesRecovered = await d3.csv(Config.timeSeriesRecovered)
         
         const dates = []
-        for (let key in timeSeriesComfirmed[0]) {
+        for (let key in timeSeriesconfirmed[0]) {
             if (key != 'Country/Region' && key != 'Lat' && key != 'Long' && key != 'Province/State') {
                 dates.push(key)
             }
         }
 
-        const timeSeriesComfirmedData = []
+        const timeSeriesconfirmedData = []
         const timeSeriesDeathData = []
         const timeSeriesRecoveredData = []
         const getValuesInDate = (f, d, dd) => {
@@ -38,25 +38,25 @@ class DataProcessor {
             })
         }
         for (let d of dates) {
-            const comfirmed = {}
+            const confirmed = {}
             const death = {}
             const recovered = {}
             let date = new Date(d)
-            getValuesInDate(timeSeriesComfirmed, d, comfirmed)
+            getValuesInDate(timeSeriesconfirmed, d, confirmed)
             getValuesInDate(timeSeriesDeath, d, death)
             getValuesInDate(timeSeriesRecovered, d, recovered)
-            timeSeriesComfirmedData.push([date, comfirmed])
+            timeSeriesconfirmedData.push([date, confirmed])
             timeSeriesDeathData.push([date, death])
             timeSeriesRecoveredData.push([date, recovered])
         }
         const totalDays = dates.length
         this.countryNames = Object.keys(countryNames)
         this.currentData = this.countryNames.map(c => ({name: c,
-                                                        comfirmed: timeSeriesComfirmedData[totalDays-1][1][c],
+                                                        confirmed: timeSeriesconfirmedData[totalDays-1][1][c],
                                                         death: timeSeriesDeathData[totalDays-1][1][c],
                                                         recovered: timeSeriesRecoveredData[totalDays-1][1][c],}))
-        this.timeSeriesData = {timeSeriesComfirmedData, timeSeriesDeathData, timeSeriesRecoveredData}
-        this.rawData = {timeSeriesComfirmed, timeSeriesDeath, timeSeriesRecovered}
+        this.timeSeriesData = {timeSeriesconfirmedData, timeSeriesDeathData, timeSeriesRecoveredData}
+        this.rawData = {timeSeriesconfirmed, timeSeriesDeath, timeSeriesRecovered}
         this.dates = dates
     }
     
@@ -118,9 +118,9 @@ class DataProcessor {
 
     getTimeSeriesData(type) {
         let data = null
-        const {timeSeriesComfirmedData, timeSeriesDeathData, timeSeriesRecoveredData} = this.timeSeriesData
-        if (type == 'comfirmed') {
-            data = timeSeriesComfirmedData
+        const {timeSeriesconfirmedData, timeSeriesDeathData, timeSeriesRecoveredData} = this.timeSeriesData
+        if (type == 'confirmed') {
+            data = timeSeriesconfirmedData
         } else if (type == 'death') {
             data = timeSeriesDeathData
         } else {
@@ -168,9 +168,9 @@ class DataProcessor {
     }
 
     getCountryAllData(country) {
-        const {timeSeriesComfirmedData, timeSeriesDeathData, timeSeriesRecoveredData} = this.timeSeriesData
+        const {timeSeriesconfirmedData, timeSeriesDeathData, timeSeriesRecoveredData} = this.timeSeriesData
         const data = this.dates.map((d, i) => ({date: (new Date(d)).getTime(),
-                                                comfirmed: timeSeriesComfirmedData[i][1][country],
+                                                confirmed: timeSeriesconfirmedData[i][1][country],
                                                 death: timeSeriesDeathData[i][1][country],
                                                 recovered: timeSeriesRecoveredData[i][1][country]}))
         return data
