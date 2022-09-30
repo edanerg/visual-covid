@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "d3": "^5.16.0",
+    "d3": "^7.6.1",
     "d3-interpolate-path": "^2.2.1",
     "topojson": "^3.0.2",
     "vue": "^2.6.11",
